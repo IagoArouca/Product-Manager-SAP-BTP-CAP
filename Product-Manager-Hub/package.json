@@ -5,20 +5,37 @@
   "repository": "https://github.com/seu-usuario/seu-projeto",
   "license": "UNLICENSED",
   "dependencies": {
-    "@sap/cds": "^7",
-    "express": "^4",
-    "@sap/cds-dk": "^7"
+    "@sap/cds": "^9.7.1",
+    "@sap/cds-dk": "^7",
+    "express": "^4"
   },
   "devDependencies": {
+    "@cap-js/sqlite": "^2.1.3",
+    "cds-plugin-ui5": "^0.13.0",
     "sqlite3": "^5.1.6"
   },
   "scripts": {
     "start": "cds-serve",
-    "watch": "cds watch"
+    "watch": "cds watch",
+    "watch-orders_app": "cds watch --open ordersapp/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-products_app": "cds watch --open productsapp/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "cds": {
     "requires": {
-      "db": "sqlite"
+      "db": {
+        "kind": "sqlite",
+        "credentials": { "url": "sqlite.db" }
+      }
+    },
+    "features": {
+      "drafts": true
     }
-  }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/orders_app",
+    "app/products_app"
+  ]
 }

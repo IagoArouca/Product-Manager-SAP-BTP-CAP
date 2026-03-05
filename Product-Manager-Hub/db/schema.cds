@@ -1,13 +1,13 @@
 namespace app.products;
 
 using {
+    cuid,
     managed,
     Currency,
     sap.common.CodeList
 } from '@sap/cds/common';
 
-entity Products : managed {
-    key ID      : UUID;
+entity Products : cuid, managed {
     identifier  : String(20);
     name        : String(100);
     description : String(1000);
@@ -22,17 +22,17 @@ entity Categories : CodeList {
     key ID : Integer;
 }
 
-entity Orders : managed {
-    key ID          : UUID;
+entity Orders : cuid, managed {
+    @Core.Computed
     orderNo         : String(10); 
     customerName    : String(100);
+    @Core.Computed
     totalAmount     : Decimal(15, 2) default 0;
     currency        : Currency;
     items           : Composition of many OrderItems on items.parent = $self;
 }
 
-entity OrderItems : managed {
-    key ID      : UUID;
+entity OrderItems : cuid, managed {
     parent      : Association to Orders;
     product     : Association to Products;
     quantity    : Integer;
