@@ -1,0 +1,24 @@
+{
+  "name": "cp-products-management",
+  "version": "1.0.0",
+  "description": "Enterprise Product Management System",
+  "repository": "https://github.com/seu-usuario/seu-projeto",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@sap/cds": "^7",
+    "express": "^4",
+    "@sap/cds-dk": "^7"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.1.6"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch"
+  },
+  "cds": {
+    "requires": {
+      "db": "sqlite"
+    }
+  }
+}
