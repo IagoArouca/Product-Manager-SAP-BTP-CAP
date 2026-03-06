@@ -1,84 +1,123 @@
 using ProductService as service from '../../srv/product-service';
+
 annotate service.Products with @(
-    UI.FieldGroup #GeneratedGroup : {
+
+    UI.HeaderInfo : {
+        TypeName       : 'Produto',
+        TypeNamePlural : 'Produtos',
+        Title          : { Value : name },
+        Description    : { Value : identifier }
+    },
+
+    UI.FieldGroup #GeneralInformation : {
         $Type : 'UI.FieldGroupType',
-        Data : [
+        Data  : [
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Identificador',
-                Value : identifier,
+                Value : identifier
             },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Nome do Produto',
-                Value : name,
+                Value : name
             },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Descrição',
-                Value : description,
+                Value : description
             },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Imagem',
-                Value : imageURL,
-            },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Preço',
-                Value : price,
+                Value : price
             },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Moeda',
-                Value : currency_code,
+                Value : currency_code
             },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Estoque',
-                Value : stock,
+                Value : stock
             },
+
             {
                 $Type : 'UI.DataField',
                 Label : 'Categoria',
-                Value : category_ID,
-            },
-        ],
+                Value : category_ID
+            }
+
+        ]
     },
+
+    UI.FieldGroup #ProductImage : {
+        $Type : 'UI.FieldGroupType',
+        Data  : [
+            {
+                $Type : 'UI.DataField',
+                Label : 'Imagem do Produto',
+                Value : imageURL
+            }
+        ]
+    },
+
     UI.Facets : [
+
         {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
-            Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup',
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'GeneralInfoFacet',
+            Label  : 'Informações Gerais',
+            Target : '@UI.FieldGroup#GeneralInformation'
         },
+
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'ImageFacet',
+            Label  : 'Imagem do Produto',
+            Target : '@UI.FieldGroup#ProductImage'
+        }
+
     ],
+
     UI.LineItem : [
-        {
-            $Type : 'UI.DataField',
-            Label : 'Identificador',
-            Value : identifier,
-        },
+
         {
             $Type : 'UI.DataField',
             Label : 'Produto',
-            Value : name,
+            Value : name
         },
+
         {
             $Type : 'UI.DataField',
             Label : 'Descrição',
-            Value : description,
+            Value : description
         },
-        {
-            $Type : 'UI.DataField',
-            Label : 'Imagem',
-            Value : imageURL,
-        },
+
         {
             $Type : 'UI.DataField',
             Label : 'Preço',
-            Value : price,
+            Value : price
         },
-    ],
-);
 
+        {
+            $Type : 'UI.DataField',
+            Label : 'Moeda',
+            Value : currency_code
+        },
+
+        {
+            $Type : 'UI.DataField',
+            Label : 'Estoque',
+            Value : stock
+        }
+
+    ]
+);
