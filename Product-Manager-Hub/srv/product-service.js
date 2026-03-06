@@ -37,7 +37,7 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         this.after(['CREATE','UPDATE','DELETE'], OrderItems.drafts, async (data, req) => {
 
-            const orderID = data.parent_ID;
+            const orderID = data?.parent_ID || req.data?.parent_ID;
 
             if (!orderID) return;
 
@@ -60,6 +60,34 @@ module.exports = class ProductService extends cds.ApplicationService {
                 .where({ ID: orderID });
 
             console.log("📊 [TOTAL RECALCULADO]: R$", totalPedido);
+
+        });
+
+
+
+        this.after('READ', Orders, async (orders, req) => {
+
+            const list = Array.isArray(orders) ? orders : [orders];
+
+            for (const order of list) {
+
+                const items = await SELECT.from(OrderItems)
+                    .where({ parent_ID: order.ID });
+
+                let total = 0;
+
+                for (const item of items) {
+
+                    const quantity = Number(item.quantity || 0);
+                    const price = Number(item.itemPrice || 0);
+
+                    total += quantity * price;
+
+                }
+
+                order.totalAmount = total;
+
+            }
 
         });
 
