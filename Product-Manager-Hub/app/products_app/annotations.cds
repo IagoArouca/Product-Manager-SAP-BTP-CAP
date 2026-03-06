@@ -5,42 +5,42 @@ annotate service.Products with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : 'identifier',
+                Label : 'Identificador',
                 Value : identifier,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'name',
+                Label : 'Nome do Produto',
                 Value : name,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'description',
+                Label : 'Descrição',
                 Value : description,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'imageURL',
+                Label : 'Imagem',
                 Value : imageURL,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'price',
+                Label : 'Preço',
                 Value : price,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'currency_code',
+                Label : 'Moeda',
                 Value : currency_code,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'stock',
+                Label : 'Estoque',
                 Value : stock,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'category_ID',
+                Label : 'Categoria',
                 Value : category_ID,
             },
         ],
@@ -56,27 +56,27 @@ annotate service.Products with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
-            Label : 'identifier',
+            Label : 'Identificador',
             Value : identifier,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'name',
+            Label : 'Produto',
             Value : name,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'description',
+            Label : 'Descrição',
             Value : description,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'imageURL',
+            Label : 'Imagem',
             Value : imageURL,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'price',
+            Label : 'Preço',
             Value : price,
         },
     ],

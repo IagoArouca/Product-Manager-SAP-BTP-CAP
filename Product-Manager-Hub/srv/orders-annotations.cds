@@ -8,10 +8,10 @@ annotate service.Orders with @(
         Description    : { $Type : 'UI.DataField', Value : customerName }
     },
     UI.LineItem : [
-        { Value : orderNo },
-        { Value : customerName },
-        { Value : totalAmount },
-        { Value : currency_code }
+        { Value : orderNo, Label : 'Número do Pedido' },
+        { Value : customerName, Label : 'Cliente' },
+        { Value : totalAmount, Label : 'Valor Total' },
+        { Value : currency_code, Label : 'Moeda' }
     ],
     UI.Facets : [
         {
@@ -27,15 +27,15 @@ annotate service.Orders with @(
     ],
     UI.FieldGroup #GeneralInfo : {
         Data : [
-            { Value : orderNo },
-            { Value : customerName },
-            { Value : totalAmount },
-            { Value : currency_code }
+            { Value : orderNo, Label : 'Número do Pedido' },
+            { Value : customerName, Label : 'Cliente' },
+            { Value : totalAmount, Label : 'Valor Total' },
+            { Value : currency_code, Label : 'Moeda' }
         ]
     }
 );
 
-// --- COMPORTAMENTO DE CAMPOS ---
+
 annotate service.Orders with {
     orderNo     @Core.Computed;
     totalAmount @Core.Computed;
@@ -45,7 +45,7 @@ annotate service.OrderItems with {
     itemPrice   @Core.Computed;
 };
 
-// --- SIDE EFFECTS (O SEGREDO PARA ATUALIZAR A TELA) ---
+
 annotate service.OrderItems @Common.SideEffects : {
     SourceProperties : [ product_ID, quantity ],
     TargetProperties : [ itemPrice, 'parent/totalAmount' ],
@@ -60,7 +60,7 @@ annotate service.OrderItems with @(
     ]
 );
 
-// Configuração da Lupa (Value Help)
+
 annotate service.OrderItems with {
     product @(
         Common.Text : product.name,

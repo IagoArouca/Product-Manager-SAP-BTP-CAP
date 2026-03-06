@@ -7,24 +7,15 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         const { Products, Orders, OrderItems } = this.entities;
 
-        // =====================================================
-        // 1️⃣ GERAR NÚMERO DO PEDIDO
-        // =====================================================
         this.before(['NEW', 'CREATE'], 'Orders', (req) => {
 
             req.data.orderNo = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
 
-            // inicializa total
             req.data.totalAmount = 0;
 
         });
 
-        // =====================================================
-        // 2️⃣ PREÇO AUTOMÁTICO DO ITEM
-        // =====================================================
-        // 🔧 CORREÇÃO:
-        // O preço deve ser definido quando o item é criado ou alterado
-        // e NÃO no draftPrepare
+
 
         this.before(['CREATE','UPDATE'], OrderItems.drafts, async (req) => {
 
@@ -43,11 +34,6 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         });
 
-        // =====================================================
-        // 3️⃣ RECALCULAR TOTAL DO PEDIDO
-        // =====================================================
-        // 🔧 CORREÇÃO PRINCIPAL:
-        // Em vez de usar draftPrepare, escutamos mudanças nos itens
 
         this.after(['CREATE','UPDATE','DELETE'], OrderItems.drafts, async (data, req) => {
 
@@ -55,7 +41,6 @@ module.exports = class ProductService extends cds.ApplicationService {
 
             if (!orderID) return;
 
-            // busca itens do rascunho
             const items = await SELECT.from(OrderItems.drafts)
                 .where({ parent_ID: orderID });
 
@@ -70,7 +55,6 @@ module.exports = class ProductService extends cds.ApplicationService {
 
             }
 
-            // atualiza total do pedido
             await UPDATE(Orders.drafts)
                 .set({ totalAmount: totalPedido })
                 .where({ ID: orderID });
@@ -79,9 +63,6 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         });
 
-        // =====================================================
-        // 4️⃣ BAIXA DE ESTOQUE AO SALVAR
-        // =====================================================
 
         this.before('SAVE', 'Orders', async (req) => {
 
@@ -90,7 +71,25 @@ module.exports = class ProductService extends cds.ApplicationService {
 
             for (const item of items) {
 
+                 if (!item.product_ID) {
+                    req.error("Existe um item sem produto selecionado.");
+                }
+
                 if (item.product_ID) {
+
+                     const product = await SELECT.one
+                        .from(Products)
+                        .where({ ID: item.product_ID })
+                        .columns('stock','name');
+
+                    if (!product) {
+                        req.error(`Produto não encontrado.`);
+                    }
+
+                    if (product.stock < item.quantity) {
+                        req.error(`Estoque insuficiente para o produto ${product.name}. Estoque atual: ${product.stock}`);
+                    }
+
 
                     await UPDATE(Products)
                         .where({ ID: item.product_ID })
