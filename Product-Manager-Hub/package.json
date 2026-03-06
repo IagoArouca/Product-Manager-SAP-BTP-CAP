@@ -24,7 +24,25 @@
     "requires": {
       "db": {
         "kind": "sqlite",
-        "credentials": { "url": "sqlite.db" }
+        "credentials": {
+          "url": "sqlite.db"
+        }
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "alice": {
+            "roles": [
+              "admin",
+              "authenticated-user"
+            ]
+          },
+          "bob": {
+            "roles": [
+              "authenticated-user"
+            ]
+          }
+        }
       }
     },
     "features": {

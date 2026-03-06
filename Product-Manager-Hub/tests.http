@@ -1,0 +1,28 @@
+### 1. ACESSAR SEM LOGIN (DEVE DAR 401)
+GET http://localhost:4004/odata/v4/product/Products
+
+### 2. ACESSAR COMO BOB (DEVE DAR 200)
+GET http://localhost:4004/odata/v4/product/Products
+Authorization: Basic bob:
+
+### 3. BOB TENTANDO CRIAR (DEVE DAR 403)
+POST http://localhost:4004/odata/v4/product/Products
+Authorization: Basic bob:
+Content-Type: application/json
+
+{
+    "name": "Tentativa do Bob",
+    "price": 100.00,
+    "stock": 10
+}
+
+### 4. ALICE CRIANDO (DEVE DAR 201)
+POST http://localhost:4004/odata/v4/product/Products
+Authorization: Basic alice:
+Content-Type: application/json
+
+{
+    "name": "Novo Mouse Gamer",
+    "price": 250.00,
+    "stock": 50
+}
