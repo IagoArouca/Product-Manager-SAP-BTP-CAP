@@ -1,50 +1,48 @@
 using ProductService as service from './product-service';
 
 annotate service.Orders with @(
+
+    UI.SelectionFields : [
+        orderNo,
+        customerName
+    ],
+
     UI.HeaderInfo : {
-        TypeName       : 'Pedido',
-        TypeNamePlural : 'Pedidos',
+        TypeName       : '{i18n>Order}',
+        TypeNamePlural : '{i18n>Orders}',
         Title          : { $Type : 'UI.DataField', Value : orderNo },
         Description    : { $Type : 'UI.DataField', Value : customerName }
     },
+
     UI.LineItem : [
-        { Value : orderNo, Label : 'Número do Pedido' },
-        { Value : customerName, Label : 'Cliente' },
-        { Value : totalAmount, Label : 'Valor Total' },
-        { Value : currency_code, Label : 'Moeda' }
+        { Value : orderNo },
+        { Value : customerName },
+        { Value : totalAmount },
+        { Value : currency_code, Label: 'Moeda' }
     ],
+
     UI.Facets : [
         {
-            $Type : 'UI.ReferenceFacet',
-            Label : 'Informações Gerais',
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>GeneralInfo}',
             Target : '@UI.FieldGroup#GeneralInfo'
         },
         {
-            $Type : 'UI.ReferenceFacet',
-            Label : 'Itens do Pedido',
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>OrderItems}',
             Target : 'items/@UI.LineItem'
         }
     ],
+
     UI.FieldGroup #GeneralInfo : {
         Data : [
-            { Value : orderNo, Label : 'Número do Pedido' },
-            { Value : customerName, Label : 'Cliente' },
-            { Value : totalAmount, Label : 'Valor Total' },
-            { Value : currency_code, Label : 'Moeda' }
+            { Value : orderNo },
+            { Value : customerName },
+            { Value : totalAmount },
+            { Value : currency_code }
         ]
     }
 );
-
-
-annotate service.Orders with {
-    orderNo     @Core.Computed;
-    totalAmount @Core.Computed;
-};
-
-annotate service.OrderItems with {
-    itemPrice   @Core.Computed;
-};
-
 
 annotate service.OrderItems @Common.SideEffects : {
     SourceProperties : [ product_ID, quantity ],
@@ -54,12 +52,11 @@ annotate service.OrderItems @Common.SideEffects : {
 
 annotate service.OrderItems with @(
     UI.LineItem : [
-        { Value : product_ID, Label : 'Produto' },
-        { Value : quantity, Label : 'Quantidade' },
-        { Value : itemPrice, Label : 'Preço Unitário' }
+        { Value : product_ID },
+        { Value : quantity },
+        { Value : itemPrice }
     ]
 );
-
 
 annotate service.OrderItems with {
     product @(

@@ -22,6 +22,7 @@ module.exports = class ProductService extends cds.ApplicationService {
         this.before('SAVE', Orders, req => this.validateAndDecreaseStock(req))
 
         this.before(['NEW', 'CREATE'], Products, req => this.generateProductIdentifier(req))
+        
 
         await super.init()
     }

@@ -2,9 +2,14 @@ using ProductService as service from '../../srv/product-service';
 
 annotate service.Products with @(
 
+    UI.SelectionFields : [
+        name,
+        category_ID
+    ],
+
     UI.HeaderInfo : {
-        TypeName       : 'Produto',
-        TypeNamePlural : 'Produtos',
+        TypeName       : '{i18n>Product}',
+        TypeNamePlural : '{i18n>Products}',
         Title          : { Value : name },
         Description    : { Value : identifier }
     },
@@ -22,16 +27,15 @@ annotate service.Products with @(
         Data  : [
             {
                 $Type : 'UI.DataField',
-                Label : 'Identificador',
                 Value : identifier,
                 @odata.fieldcontrol : #ReadOnly
             },
-            { $Type : 'UI.DataField', Label : 'Nome do Produto', Value : name },
-            { $Type : 'UI.DataField', Label : 'Descrição', Value : description },
-            { $Type : 'UI.DataField', Label : 'Preço', Value : price },
-            { $Type : 'UI.DataField', Label : 'Moeda', Value : currency_code },
-            { $Type : 'UI.DataField', Label : 'Estoque', Value : stock },
-            { $Type : 'UI.DataField', Label : 'Categoria', Value : category_ID }
+            { $Type : 'UI.DataField', Value : name },
+            { $Type : 'UI.DataField', Value : description },
+            { $Type : 'UI.DataField', Value : price },
+            { $Type : 'UI.DataField', Value : currency_code, Label: 'Moeda' },
+            { $Type : 'UI.DataField', Value : stock },
+            { $Type : 'UI.DataField', Value : category_ID }
         ]
     },
 
@@ -40,7 +44,8 @@ annotate service.Products with @(
         Data  : [
             {
                 $Type : 'UI.DataField',
-                Value : imageURL
+                Value : imageURL,
+                Label : ''
             }
         ]
     },
@@ -49,22 +54,20 @@ annotate service.Products with @(
         {
             $Type  : 'UI.ReferenceFacet',
             ID     : 'GeneralInfoFacet',
-            Label  : 'Informações Gerais',
+            Label  : '{i18n>GeneralInfo}',
             Target : '@UI.FieldGroup#GeneralInformation'
         }
 
     ],
 
     UI.LineItem : [
-        { $Type : 'UI.DataField', Label : 'Produto', Value : name },
-        { $Type : 'UI.DataField', Label : 'Descrição', Value : description },
-        { $Type : 'UI.DataField', Label : 'Preço', Value : price },
-        { $Type : 'UI.DataField', Label : 'Moeda', Value : currency_code },
-        { $Type : 'UI.DataField', Label : 'Estoque', Value : stock }
+        { $Type : 'UI.DataField', Value : name },
+        { $Type : 'UI.DataField', Value : description },
+        { $Type : 'UI.DataField', Value : price },
+        { $Type : 'UI.DataField', Value : currency_code, Label: 'Moeda' },
+        { $Type : 'UI.DataField', Value : stock }
     ]
 );
-
-
 
 annotate service.Products with {
     imageURL @UI.IsImageURL: true;

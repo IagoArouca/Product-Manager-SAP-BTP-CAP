@@ -1,4 +1,4 @@
 ID;identifier;name;description;price;stock;imageURL
-708d7d91-0309-4822-959c-6743b8118d0c;PROD-001;Notebook Pro;Notebook de alta performance;5500.00;50;https://raw.githubusercontent.com/SAP-samples/cloud-cap-samples/main/reviews/app/common/images/Laptop.png
-742bebd7-4e5a-470a-8d76-13d85d70f90e;PROD-002;Mouse Gamer;Mouse RGB 16000 DPI;250.00;100;https://raw.githubusercontent.com/SAP-samples/cloud-cap-samples/main/reviews/app/common/images/Mouse.png
-47c7c093-6a97-4402-9538-4f0578848d6d;PROD-003;Teclado Mecânico;Teclado Switch Blue;450.00;30;https://raw.githubusercontent.com/SAP-samples/cloud-cap-samples/main/reviews/app/common/images/Keyboard.png
+708d7d91-0309-4822-959c-6743b8118d0c;PROD-001;Monitor;Monitor de 24 polegadas;5500.00;50;https://sdk.openui5.org/test-resources/sap/ui/documentation/sdk/images/HT-1030.jpg
+742bebd7-4e5a-470a-8d76-13d85d70f90e;PROD-002;Mouse Gamer;Mouse RGB 16000 DPI;250.00;100;https://sdk.openui5.org/test-resources/sap/ui/documentation/sdk/images/HT-1060.jpg
+47c7c093-6a97-4402-9538-4f0578848d6d;PROD-003;Placa de Vídeo (GPU);Componente de computador para processamento gráfico;450.00;30;https://sdk.openui5.org/test-resources/sap/ui/documentation/sdk/images/HT-1071.jpg
