@@ -8,6 +8,7 @@ using {
 } from '@sap/cds/common';
 
 entity Products : cuid, managed {
+    @Core.Computed
     identifier  : String(20);
     name        : String(100);
     description : String(1000);
@@ -20,6 +21,9 @@ entity Products : cuid, managed {
 
 entity Categories : CodeList {
     key ID : Integer;
+    @Common.Text: name  
+    @Common.TextArrangement: #TextOnly
+    name : String(100);
 }
 
 entity Orders : cuid, managed {

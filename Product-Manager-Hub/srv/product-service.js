@@ -21,6 +21,8 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         this.before('SAVE', Orders, req => this.validateAndDecreaseStock(req))
 
+        this.before(['NEW', 'CREATE'], Products, req => this.generateProductIdentifier(req))
+
         await super.init()
     }
 
@@ -95,22 +97,22 @@ module.exports = class ProductService extends cds.ApplicationService {
     }
 
 
-    async calculateTotalOnRead(orders){
+        async calculateTotalOnRead(orders){
 
-    const { OrderItems } = this.entities
+        const { OrderItems } = this.entities
 
-    const list = Array.isArray(orders) ? orders : [orders]
+        const list = Array.isArray(orders) ? orders : [orders]
 
-    for(const order of list){
+        for(const order of list){
 
-        const result = await SELECT.one`
-            sum(quantity * itemPrice) as total
-        `.from(OrderItems)
-         .where({ parent_ID: order.ID })
+            const result = await SELECT.one`
+                sum(quantity * itemPrice) as total
+            `.from(OrderItems)
+            .where({ parent_ID: order.ID })
 
-        order.totalAmount = result.total || 0
+            order.totalAmount = result.total || 0
+        }
     }
-}
 
 
     async validateAndDecreaseStock(req){
@@ -164,6 +166,14 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         }
 
+    }
+
+    generateProductIdentifier(req) {
+        const LOG = cds.log('products')
+
+        req.data.identifier = `PRD-${Math.floor(1000 + Math.random() * 9000)}`
+
+        LOG.info(`Código de produto gerado: ${req.data.identifier}`)
     }
 
 }
