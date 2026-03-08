@@ -37,7 +37,7 @@ annotate service.Orders with @(
     UI.FieldGroup #GeneralInfo : {
         Data : [
             { Value : orderNo },
-            { Value : customerName },
+            { Value : customerName_ID },
             { Value : totalAmount },
             { Value : currency_code }
         ]
@@ -61,6 +61,7 @@ annotate service.OrderItems with @(
 annotate service.OrderItems with {
     product @(
         Common.Text : product.name,
+        Common.TextArrangement : #TextOnly,
         Common.ValueList : {
             CollectionPath : 'Products',
             Parameters : [
@@ -70,4 +71,21 @@ annotate service.OrderItems with {
             ]
         }
     )
+};
+
+annotate service.Orders with {
+    customerName  @(
+        Common.ValueListWithFixedValues : false,
+        Common.Text : customerName.name, 
+        Common.TextArrangement : #TextOnly,
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'Customers',
+            Parameters : [
+                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : customerName_ID, ValueListProperty : 'ID' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'name' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'cpf' }
+            ]
+        }
+    );
 };

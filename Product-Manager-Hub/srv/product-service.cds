@@ -17,4 +17,7 @@ service ProductService @(requires: 'authenticated-user') {
     
     @readonly
     entity Categories as projection on my.Categories;
+
+    @odata.draft.enabled
+    entity Customers as projection on my.Customers;
 }

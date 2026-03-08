@@ -18,7 +18,8 @@
     "start": "cds-serve",
     "watch": "cds watch",
     "watch-orders_app": "cds watch --open ordersapp/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-products_app": "cds watch --open productsapp/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-products_app": "cds watch --open productsapp/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-clientes": "cds watch --open clientes/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "cds": {
     "requires": {
@@ -54,6 +55,7 @@
   ],
   "sapux": [
     "app/orders_app",
-    "app/products_app"
+    "app/products_app",
+    "app/clientes"
   ]
 }

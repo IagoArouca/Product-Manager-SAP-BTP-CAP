@@ -48,7 +48,7 @@ entity Orders : cuid, managed {
     orderNo         : String(10); 
 
     @title: '{i18n>Customer}'
-    customerName    : String(100);
+    customerName    : Association to Customers;
 
     @Core.Computed
     @title: '{i18n>TotalAmount}'
@@ -73,4 +73,19 @@ entity OrderItems : cuid, managed {
     @Core.Computed 
     @title: '{i18n>UnitPrice}'
     itemPrice   : Decimal(15, 2);
+}
+
+entity Customers : cuid, managed {
+    @title: '{i18n>Name}'
+    @Common.FieldControl: #Mandatory
+    name  : String(100);
+
+    @title: '{i18n>CPF}'
+    @Common.FieldControl: #Mandatory
+    @assert.format: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+    cpf   : String(14); 
+
+    @title: '{i18n>Email}'
+    @assert.format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    email : String(100);
 }
