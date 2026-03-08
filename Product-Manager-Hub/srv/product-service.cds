@@ -3,10 +3,14 @@ using { app.products as my } from '../db/schema';
 service ProductService @(requires: 'authenticated-user') {
     
     @odata.draft.enabled
-    entity Orders as projection on my.Orders;
+    entity Orders as projection on my.Orders
+      actions {
+            action finalizeOrder();
+        };
 
 
     entity OrderItems as projection on my.OrderItems;
+   
 
     @odata.draft.enabled
     entity Products as projection on my.Products;

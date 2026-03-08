@@ -57,9 +57,18 @@ entity Orders : cuid, managed {
     @title: '{i18n>Currency}'
     currency        : Currency;
 
+    @title: '{i18n>Status}'
+    @readonly
+    status          : String(20) default 'Aberto'; 
+
     @title: '{i18n>OrderItems}'
     items           : Composition of many OrderItems on items.parent = $self;
+    
 }
+
+extend entity Orders with actions {
+    action finalizeOrder();
+};
 
 entity OrderItems : cuid, managed {
     parent      : Association to Orders;

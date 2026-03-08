@@ -1,7 +1,6 @@
 using ProductService as service from './product-service';
 
 annotate service.Orders with @(
-
     UI.SelectionFields : [
         orderNo,
         customerName
@@ -11,14 +10,25 @@ annotate service.Orders with @(
         TypeName       : '{i18n>Order}',
         TypeNamePlural : '{i18n>Orders}',
         Title          : { $Type : 'UI.DataField', Value : orderNo },
-        Description    : { $Type : 'UI.DataField', Value : customerName }
+        Description    : { $Type : 'UI.DataField', Value : customerName.name }
     },
 
     UI.LineItem : [
         { Value : orderNo },
-        { Value : customerName },
+        { Value : customerName_ID },
         { Value : totalAmount },
+        { Value : status, Label: 'Status' }, 
         { Value : currency_code, Label: 'Moeda' }
+    ],
+
+    UI.Identification : [
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Action : 'ProductService.finalizeOrder',
+            Label  : 'Finalizar Pedido',
+            Determining : true,
+            Criticality : #Positive
+        }
     ],
 
     UI.Facets : [
@@ -39,6 +49,7 @@ annotate service.Orders with @(
             { Value : orderNo },
             { Value : customerName_ID },
             { Value : totalAmount },
+            { Value : status },
             { Value : currency_code }
         ]
     }
@@ -88,4 +99,22 @@ annotate service.Orders with {
             ]
         }
     );
+};
+
+annotate service.Orders with @(
+    Capabilities.UpdateRestrictions : {
+        Updatable : {$edmJson: {$Ne: [{$Path: 'status'}, 'Finalizado']}}
+    }
+);
+
+annotate service.Orders with actions {
+    finalizeOrder @(
+        Common.SideEffects : {
+            TargetProperties : ['status']
+        }
+    );
+};
+
+annotate service.Orders actions {
+    finalizeOrder @Core.OperationAvailable : {$edmJson: {$Ne: [{$Path: 'status'}, 'Finalizado']}}
 };
