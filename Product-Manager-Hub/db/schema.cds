@@ -30,6 +30,12 @@ entity Products : cuid, managed {
     @title: '{i18n>Stock}'
     stock       : Integer;
 
+    stockCriticality : Integer @(Core.Computed) = case 
+        when stock > 20 then 3 
+        when stock > 5  then 2 
+        else 1                
+    end;
+
     @title: '{i18n>Category}'
     category    : Association to Categories;
 }
@@ -61,6 +67,12 @@ entity Orders : cuid, managed {
     @readonly
     status          : String(20) default 'Aberto'; 
 
+    statusCriticality : Integer @(Core.Computed) = case 
+        when status = 'Finalizado' then 3 
+        when status = 'Aberto'     then 2 
+        else 0                            
+    end;
+
     @title: '{i18n>OrderItems}'
     items           : Composition of many OrderItems on items.parent = $self;
     
@@ -68,6 +80,7 @@ entity Orders : cuid, managed {
 
 extend entity Orders with actions {
     action finalizeOrder();
+    action cancelFinalization();
 };
 
 entity OrderItems : cuid, managed {

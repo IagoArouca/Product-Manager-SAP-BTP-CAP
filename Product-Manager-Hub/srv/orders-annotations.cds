@@ -17,7 +17,12 @@ annotate service.Orders with @(
         { Value : orderNo },
         { Value : customerName_ID },
         { Value : totalAmount },
-        { Value : status, Label: 'Status' }, 
+        { 
+            Value : status,
+            Label: 'Status',
+            Criticality : statusCriticality,
+            CriticalityRepresentation : #WithIcon
+         }, 
         { Value : currency_code, Label: 'Moeda' }
     ],
 
@@ -28,6 +33,13 @@ annotate service.Orders with @(
             Label  : 'Finalizar Pedido',
             Determining : true,
             Criticality : #Positive
+        },
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Action : 'ProductService.cancelFinalization',
+            Label  : 'Cancelar Finalização',
+            Determining : true,
+            Criticality : #Negative
         }
     ],
 
@@ -64,6 +76,11 @@ annotate service.OrderItems @Common.SideEffects : {
 annotate service.OrderItems with @(
     UI.LineItem : [
         { Value : product_ID },
+        { 
+            Value : product.stock, @Common.FieldControl : #ReadOnly, 
+            Criticality : product.stockCriticality, 
+            Label : 'Estoque Disponível'
+        },
         { Value : quantity },
         { Value : itemPrice }
     ]
@@ -84,10 +101,12 @@ annotate service.OrderItems with {
     )
 };
 
+
+
 annotate service.Orders with {
     customerName  @(
         Common.ValueListWithFixedValues : false,
-        Common.Text : customerName.name, 
+        Common.Text : customerName.name,
         Common.TextArrangement : #TextOnly,
         Common.ValueList : {
             $Type : 'Common.ValueListType',
@@ -110,11 +129,25 @@ annotate service.Orders with @(
 annotate service.Orders with actions {
     finalizeOrder @(
         Common.SideEffects : {
-            TargetProperties : ['status']
+            TargetProperties : ['status'],
+            TargetEntities   : ['items', 'items/product']
         }
     );
 };
 
 annotate service.Orders actions {
     finalizeOrder @Core.OperationAvailable : {$edmJson: {$Ne: [{$Path: 'status'}, 'Finalizado']}}
+};
+
+annotate service.Orders with actions {
+    cancelFinalization @(
+        Common.SideEffects : {
+            TargetProperties : ['status'],
+            TargetEntities   : ['items', 'items/product']
+        }
+    );
+};
+
+annotate service.Orders actions {
+    cancelFinalization @Core.OperationAvailable : {$edmJson: {$Eq: [{$Path: 'status'}, 'Finalizado']}}
 };

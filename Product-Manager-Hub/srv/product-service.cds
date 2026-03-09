@@ -6,6 +6,7 @@ service ProductService @(requires: 'authenticated-user') {
     entity Orders as projection on my.Orders
       actions {
             action finalizeOrder();
+            action cancelFinalization();
         };
 
 

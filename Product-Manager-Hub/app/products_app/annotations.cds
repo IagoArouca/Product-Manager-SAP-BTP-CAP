@@ -35,7 +35,8 @@ annotate service.Products with @(
             { $Type : 'UI.DataField', Value : price },
             { $Type : 'UI.DataField', Value : currency_code, Label: 'Moeda' },
             { $Type : 'UI.DataField', Value : stock },
-            { $Type : 'UI.DataField', Value : category_ID }
+            { $Type : 'UI.DataField', Value : category_ID },
+            { $Type : 'UI.DataField', Value : imageURL, Label: 'Imagem do Produto' }
         ]
     },
 
@@ -65,7 +66,7 @@ annotate service.Products with @(
         { $Type : 'UI.DataField', Value : description },
         { $Type : 'UI.DataField', Value : price },
         { $Type : 'UI.DataField', Value : currency_code, Label: 'Moeda' },
-        { $Type : 'UI.DataField', Value : stock }
+        { $Type : 'UI.DataField', Value : stock, Criticality : stockCriticality }
     ]
 );
 
