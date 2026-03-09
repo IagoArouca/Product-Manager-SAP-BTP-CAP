@@ -1,1 +1,48 @@
-node_modules
+# --- SAP CAP / CDS ---
+_out/
+gen/
+db/*.db
+db/*.sqlite
+app/dist/
+app/resources/
+default-env.json
+default-services.json
+.cdsrc-private.json
+
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# --- SAP Fiori / Tools ---
+.ui5/
+dist/
+webapp/test/flpSandbox.html
+webapp/test/changes_preview.js
+ui5-local.yaml
+ui5-publish.yaml
+
+# --- Sistema Operacional ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Editores / IDEs ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
