@@ -62,7 +62,7 @@ annotate service.Orders with @(
             { Value : customerName_ID },
             { Value : totalAmount },
             { Value : status },
-            { Value : currency_code }
+            { Value : currency_code, Label: 'Moeda' }
         ]
     }
 );

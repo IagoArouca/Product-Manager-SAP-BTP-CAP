@@ -14,15 +14,30 @@ module.exports = class ProductService extends cds.ApplicationService {
         this.after('READ', Orders, orders => this.calculateTotalOnRead(orders))
         this.before(['NEW', 'CREATE'], Products, req => this.generateProductIdentifier(req))
 
+        this.before(['CREATE','UPDATE'], Products, (req) => {
 
-        // Proteção do campo status (remove qualquer alteração manual)
+            if (!req.data.name || req.data.name.trim() === '') {
+                req.reject(400, 'O nome do produto é obrigatório.')
+            }
+
+            if (req.data.price == null || req.data.price < 0) {
+                req.reject(400, 'O preço deve ser um valor positivo.')
+            }
+
+            if (req.data.stock == null || req.data.stock < 0) {
+                req.reject(400, 'O estoque não pode ser negativo.')
+            }
+
+            if (!req.data.category_ID) {
+                req.reject(400, 'O produto deve ter uma categoria.')
+            }
+        })
+
         this.before(['UPDATE', 'PATCH'], Orders, req => {
             if ('status' in req.data) {
                 delete req.data.status
             }
         })
-
-
 
         this.on('finalizeOrder', async req => {
 
@@ -107,78 +122,72 @@ module.exports = class ProductService extends cds.ApplicationService {
 
         this.on('cancelFinalization', async req => {
 
-    const LOG = cds.log('orders')
-    const { Orders, Products, OrderItems } = this.entities
-    const orderID = req.params[0].ID
+            const LOG = cds.log('orders')
+            const { Orders, Products, OrderItems } = this.entities
+            const orderID = req.params[0].ID
 
-    const tx = cds.tx(req)
+            const tx = cds.tx(req)
 
-    // Verifica se o pedido está em draft (edição)
-    const draft = await SELECT.one
-        .from(Orders.drafts)
-        .where({ ID: orderID })
+            const draft = await SELECT.one
+                .from(Orders.drafts)
+                .where({ ID: orderID })
 
-    if (draft) {
-        return req.error(
-            400,
-            'Não é possível cancelar a finalização enquanto o pedido está em edição.'
-        )
-    }
+            if (draft) {
+                return req.error(
+                    400,
+                    'Não é possível cancelar a finalização enquanto o pedido está em edição.'
+                )
+            }
 
-    // Busca o pedido ativo
-    const order = await SELECT.one
-        .from(Orders)
-        .where({ ID: orderID })
+            const order = await SELECT.one
+                .from(Orders)
+                .where({ ID: orderID })
 
-    if (!order) {
-        LOG.error(`Pedido não encontrado ${orderID}`)
-        return req.error(404, 'Pedido não encontrado.')
-    }
+            if (!order) {
+                LOG.error(`Pedido não encontrado ${orderID}`)
+                return req.error(404, 'Pedido não encontrado.')
+            }
 
-    // Verifica status
-    if (order.status !== 'Finalizado') {
-        return req.error(
-            400,
-            'Somente pedidos finalizados podem ter a finalização cancelada'
-        )
-    }
+            if (order.status !== 'Finalizado') {
+                return req.error(
+                    400,
+                    'Somente pedidos finalizados podem ter a finalização cancelada'
+                )
+            }
 
-    // Busca itens do pedido
-    const items = await tx.read(OrderItems)
-        .where({ parent_ID: orderID })
+            const items = await tx.read(OrderItems)
+                .where({ parent_ID: orderID })
 
-    if (!items || items.length === 0) {
-        return req.error(
-            400,
-            'Pedido não possui itens para restaurar estoque.'
-        )
-    }
+            if (!items || items.length === 0) {
+                return req.error(
+                    400,
+                    'Pedido não possui itens para restaurar estoque.'
+                )
+            }
 
-    // Devolve estoque
-    for (const item of items) {
+            for (const item of items) {
 
-        await tx.update(Products)
-            .where({ ID: item.product_ID })
-            .with({
-                stock: { '+=': item.quantity }
-            })
+                await tx.update(Products)
+                    .where({ ID: item.product_ID })
+                    .with({
+                        stock: { '+=': item.quantity }
+                    })
 
-    }
+            }
 
-    // Atualiza status
-    await tx.update(Orders)
-        .where({ ID: orderID })
-        .set({
-            status: 'Aberto'
+            await tx.update(Orders)
+                .where({ ID: orderID })
+                .set({
+                    status: 'Aberto'
+                })
+
+            LOG.info(`↩ Pedido ${orderID} teve a finalização cancelada`)
+
+            return {
+                message: 'Finalização do pedido cancelada com sucesso.'
+            }
+
         })
-
-    LOG.info(`↩ Pedido ${orderID} teve a finalização cancelada`)
-
-    return {
-        message: 'Finalização do pedido cancelada com sucesso.'
-    }
-
-})
 
         this.before('EDIT', 'Orders', async req => {
 
@@ -197,7 +206,6 @@ module.exports = class ProductService extends cds.ApplicationService {
     generateOrderNumber(req){
         const LOG = cds.log('orders')
 
-        // Remove qualquer status vindo da API
         delete req.data.status
 
         req.data.orderNo = `ORD-${Math.floor(1000 + Math.random() * 9000)}`
