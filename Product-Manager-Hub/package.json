@@ -5,49 +5,59 @@
   "repository": "https://github.com/seu-usuario/seu-projeto",
   "license": "UNLICENSED",
   "dependencies": {
-    "@sap/cds": "^9.7.1",
-    "@sap/cds-dk": "^7",
-    "express": "^4"
+    "@sap/cds": "^8",
+    "@sap/xsenv": "^5",
+    "@sap/xssec": "^4",
+    "express": "^4",
+    "hdb": "^2.27.1",
+    "passport": "^0.7.0"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^2.1.3",
-    "cds-plugin-ui5": "^0.13.0",
-    "sqlite3": "^5.1.6"
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8",
+    "cds-plugin-ui5": "^0.15.0"
   },
   "scripts": {
     "start": "cds-serve",
     "watch": "cds watch",
     "watch-orders_app": "cds watch --open ordersapp/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-products_app": "cds watch --open productsapp/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-clientes": "cds watch --open clientes/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-clientes": "cds watch --open clientes/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "build": "mbt build",
+    "deploy": "cf deploy mta_archives/cp-products-management_1.0.0.mtar"
   },
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
-        "credentials": {
-          "url": "sqlite.db"
-        }
+        "kind": "sql"
       },
       "auth": {
-        "kind": "mocked",
-        "users": {
-          "alice": {
-            "roles": [
-              "admin",
-              "authenticated-user"
-            ]
-          },
-          "bob": {
-            "roles": [
-              "authenticated-user"
-            ]
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "alice": {
+              "roles": [
+                "admin",
+                "authenticated-user"
+              ]
+            },
+            "bob": {
+              "roles": [
+                "authenticated-user"
+              ]
+            }
           }
+        },
+        "[production]": {
+          "kind": "xsuaa"
         }
       }
     },
     "features": {
       "drafts": true
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
     }
   },
   "workspaces": [
