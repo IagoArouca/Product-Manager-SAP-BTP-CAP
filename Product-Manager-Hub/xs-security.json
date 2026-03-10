@@ -1,4 +1,6 @@
 {
+  "xsappname": "Product-Manager-Hub",
+  "tenant-mode": "dedicated",
   "scopes": [
     {
       "name": "$XSAPPNAME.admin",
