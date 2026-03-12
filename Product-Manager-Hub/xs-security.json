@@ -1,21 +1,25 @@
 {
-  "xsappname": "Product-Manager-Hub",
+  "xsappname": "cp-products-management-16d29341trial-dev",
   "tenant-mode": "dedicated",
   "scopes": [
     {
-      "name": "$XSAPPNAME.admin",
-      "description": "admin"
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin access"
     }
   ],
-  "attributes": [],
   "role-templates": [
     {
-      "name": "admin",
-      "description": "generated",
+      "name": "Admin",
+      "description": "Administrator",
       "scope-references": [
-        "$XSAPPNAME.admin"
-      ],
-      "attribute-references": []
+        "$XSAPPNAME.Admin"
+      ]
     }
-  ]
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.hana.ondemand.com/**"
+    ]
+  },
+  "attributes": []
 }

@@ -1,9 +1,12 @@
-_schema-version: 3.3.0
+_schema-version: "3.3"
 ID: cp-products-management
 version: 1.0.0
-description: "Enterprise Product Management System"
+description: Enterprise Product Management System
+
 parameters:
   enable-parallel-deployments: true
+  deploy_mode: html5-repo
+
 build-parameters:
   before-all:
     - builder: custom
@@ -12,14 +15,14 @@ build-parameters:
         - npx cds build --production
 
 modules:
-  # --------------------- MÓDULO DO SERVIÇO (BACKEND) ---------------------
   - name: cp-products-management-srv
     type: nodejs
     path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
-      readiness-health-check-type: http
-      readiness-health-check-http-endpoint: /health
+      memory: 512M
+      disk-quota: 512M
+      readiness-health-check-type: process
     build-parameters:
       builder: npm-ci
     provides:
@@ -30,17 +33,96 @@ modules:
       - name: cp-products-management-auth
       - name: cp-products-management-db
 
-  # --------------------- MÓDULO DE DEPLOY DO BANCO (HANA) ----------------
   - name: cp-products-management-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
+      memory: 256M
+      disk-quota: 256M
     requires:
       - name: cp-products-management-db
 
+  - name: cp-products-management-approuter
+    type: approuter.nodejs
+    path: approuter
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: cp-products-management-auth
+      - name: cp-products-management-html5-repo-runtime
+      - name: cp-products-management-portal
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+
+  - name: cp-products-management-app-deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: cp-products-management-html5-repo-host
+        parameters:
+          content-target: true
+      - name: cp-products-management-portal
+        parameters:
+          service-key:
+            name: cp-products-management-portal-key
+            config:
+              content-endpoint: developer
+    build-parameters:
+      build-result: resources
+      requires:
+        - name: cpproductsmanagementclientes
+          artifacts:
+            - clientes.zip
+          target-path: resources/
+        - name: cpproductsmanagementorders_app
+          artifacts:
+            - orders_app.zip
+          target-path: resources/
+        - name: cpproductsmanagementproducts_app
+          artifacts:
+            - products_app.zip
+          target-path: resources/
+
+  - name: cpproductsmanagementclientes
+    type: html5
+    path: app/clientes
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npx ui5 build --clean-dest
+      supported-platforms: []
+
+  - name: cpproductsmanagementorders_app
+    type: html5
+    path: app/orders_app
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npx ui5 build --clean-dest
+      supported-platforms: []
+
+  - name: cpproductsmanagementproducts_app
+    type: html5
+    path: app/products_app
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npx ui5 build --clean-dest
+      supported-platforms: []
+
 resources:
-  # --------------------- RECURSO: AUTENTICAÇÃO (XSUAA) -------------------
   - name: cp-products-management-auth
     type: org.cloudfoundry.managed-service
     parameters:
@@ -50,15 +132,27 @@ resources:
       config:
         xsappname: cp-products-management-${org}-${space}
         tenant-mode: dedicated
-        role-collections:
-          - name: 'Admin_Product_Manager_${space}'
-            description: 'Administrador do sistema de produtos'
-            role-template-references:
-              - '$XSAPPNAME.admin'
 
-  # --------------------- RECURSO: BANCO DE DADOS (HANA) ------------------
   - name: cp-products-management-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
+
+  - name: cp-products-management-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: cp-products-management-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+
+  - name: cp-products-management-portal
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: build-workzone-standard 
+      service-plan: standard           

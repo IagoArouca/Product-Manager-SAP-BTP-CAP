@@ -2,70 +2,51 @@
   "name": "cp-products-management",
   "version": "1.0.0",
   "description": "Enterprise Product Management System",
-  "repository": "https://github.com/seu-usuario/seu-projeto",
   "license": "UNLICENSED",
+
   "dependencies": {
-    "@sap/cds": "^8",
+    "@sap/cds": "^9",
     "@sap/xsenv": "^5",
     "@sap/xssec": "^4",
-    "express": "^4",
-    "hdb": "^2.27.1",
-    "passport": "^0.7.0"
+    "@cap-js/hana": "^2.7.0",
+    "express": "^4"
   },
+
   "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8",
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9",
     "cds-plugin-ui5": "^0.15.0"
   },
+
   "scripts": {
-    "start": "cds-serve",
+    "start": "npx cds-serve",
     "watch": "cds watch",
-    "watch-orders_app": "cds watch --open ordersapp/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-products_app": "cds watch --open productsapp/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-clientes": "cds watch --open clientes/index.html?sap-ui-xx-viewCache=false --livereload false",
     "build": "mbt build",
     "deploy": "cf deploy mta_archives/cp-products-management_1.0.0.mtar"
   },
+
   "cds": {
     "requires": {
       "db": {
-        "kind": "sql"
+        "kind": "hana"
       },
       "auth": {
-        "[development]": {
-          "kind": "mocked",
-          "users": {
-            "alice": {
-              "roles": [
-                "admin",
-                "authenticated-user"
-              ]
-            },
-            "bob": {
-              "roles": [
-                "authenticated-user"
-              ]
-            }
-          }
-        },
-        "[production]": {
-          "kind": "xsuaa"
-        }
+        "kind": "xsuaa"
       }
     },
+
     "features": {
       "drafts": true
     },
-    "hana": {
-      "deploy-format": "hdbtable"
+
+    "env": {
+      "production": {
+        "db": "hana"
+      }
     }
   },
+
   "workspaces": [
     "app/*"
-  ],
-  "sapux": [
-    "app/orders_app",
-    "app/products_app",
-    "app/clientes"
   ]
 }
