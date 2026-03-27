@@ -49,13 +49,6 @@ modules:
       - name: cp-products-repo-host
         parameters:
           content-target: true
-      - name: cp-products-dest-service
-        parameters:
-          content-target: true
-      - name: cp-products-auth
-        parameters:
-          service-key:
-            name: cp-products-auth-key
     build-parameters:
       build-result: resources
       requires:
@@ -118,8 +111,6 @@ resources:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
-      config:
-        xsappname: cp_products_enterprise
 
   - name: cp-products-db
     type: com.sap.xs.hdi-container
@@ -127,13 +118,12 @@ resources:
       service: hana
       service-plan: hdi-shared
 
+  # Criamos o serviço, mas o conteúdo você fará no Cockpit
   - name: cp-products-dest-service
     type: org.cloudfoundry.managed-service
     parameters:
       service: destination
       service-plan: lite
-      config:
-        HTML5Runtime_enabled: true  # <--- VITAL PARA O COCKPIT
 
   - name: cp-products-repo-host
     type: org.cloudfoundry.managed-service
