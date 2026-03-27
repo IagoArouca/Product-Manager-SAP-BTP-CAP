@@ -1,12 +1,11 @@
-sap.ui.define(
-    ["sap/fe/core/AppComponent"],
-    function (Component) {
-        "use strict";
+sap.ui.define([
+    "sap/fe/core/AppComponent"
+], function (AppComponent) {
+    "use strict";
 
-        return Component.extend("clientes.Component", {
-            metadata: {
-                manifest: "json"
-            }
-        });
-    }
-);
+    return AppComponent.extend("comdouradoclientes.Component", {
+        metadata: {
+            manifest: "json"
+        }
+    });
+});

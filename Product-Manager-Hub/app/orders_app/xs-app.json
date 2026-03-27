@@ -1,19 +1,18 @@
 {
-  "welcomeFile": "/index.html",
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/?odata/(.*)$",
+      "source": "^/odata/(.*)$", 
       "target": "/odata/$1",
-      "destination": "srv-api",
+      "destination": "cp-products-backend-dest",    
       "authenticationType": "xsuaa",
-      "csrfProtection": true
+      "csrfProtection": false 
     },
     {
       "source": "^(.*)$",
+      "target": "$1",
       "service": "html5-apps-repo-rt",
-      "authenticationType": "xsuaa",
-      "target": "$1"
+      "authenticationType": "xsuaa"
     }
   ]
 }

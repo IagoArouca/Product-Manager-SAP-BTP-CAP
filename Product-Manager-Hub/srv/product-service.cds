@@ -1,5 +1,6 @@
 using { app.products as my } from '../db/schema';
 
+@path: '/odata/v4/ProductService'
 service ProductService @(requires: 'authenticated-user') {
     
     @odata.draft.enabled

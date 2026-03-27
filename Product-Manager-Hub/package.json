@@ -1,52 +1,32 @@
 {
-  "name": "cp-products-management",
+  "name": "Product-Manager-Hub",
   "version": "1.0.0",
-  "description": "Enterprise Product Management System",
+  "description": "Projeto Gerenciador de Produtos v2",
   "license": "UNLICENSED",
-
+  "private": true,
+  "engines": {
+    "node": "^20"
+  },
   "dependencies": {
-    "@sap/cds": "^9",
-    "@sap/xsenv": "^5",
+    "@sap/cds": "^8",
+    "@cap-js/hana": "^1",
     "@sap/xssec": "^4",
-    "@cap-js/hana": "^2.7.0",
-    "express": "^4"
+    "express": "^4",
+    "passport": "^0.7"
   },
-
   "devDependencies": {
-    "@cap-js/sqlite": "^2",
-    "@sap/cds-dk": "^9",
-    "cds-plugin-ui5": "^0.15.0"
+    "@cap-js/cds-typer": "^0",
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^9"
   },
-
   "scripts": {
-    "start": "npx cds-serve",
-    "watch": "cds watch",
-    "build": "mbt build",
-    "deploy": "cf deploy mta_archives/cp-products-management_1.0.0.mtar"
+    "start": "cds-serve",
+    "build": "cds build --production"
   },
-
   "cds": {
     "requires": {
-      "db": {
-        "kind": "hana"
-      },
-      "auth": {
-        "kind": "xsuaa"
-      }
-    },
-
-    "features": {
-      "drafts": true
-    },
-
-    "env": {
-      "production": {
-        "db": "hana"
-      }
+      "db": "hana",
+      "auth": "xsuaa"
     }
-  },
-
-  "workspaces": [
-    "app/*"
-  ]
+  }
 }

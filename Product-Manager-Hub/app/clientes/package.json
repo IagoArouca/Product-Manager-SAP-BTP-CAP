@@ -1,22 +1,28 @@
 {
-  "name": "clientes",
+  "name": "comdouradoclientes",
   "version": "0.0.1",
-  "description": "An SAP Fiori application.",
+  "description": "SAP Fiori Application - Enterprise Architecture",
   "keywords": [
     "ui5",
     "openui5",
     "sapui5"
   ],
   "main": "webapp/index.html",
-  "dependencies": {},
   "devDependencies": {
-    "@ui5/cli": "^4.0.33",
-    "@sap/ux-ui5-tooling": "1",
-    "ui5-task-zipper": "^3"
+    "@sap/ux-ui5-tooling": "^1.15.0",
+    "@ui5/cli": "^4.0.33", 
+    "ui5-task-zipper": "^3.0.0"
   },
   "scripts": {
-    "deploy-config": "npx -p @sap/ux-ui5-tooling fiori add deploy-config cf",
-    "build": "ui5 build preload --clean-dest",
-    "start": "ui5 serve"
+    "start": "fiori run --config ui5.yaml",
+    "start-local": "fiori run --config ui5-local.yaml",
+    "build": "ui5 build --clean-dest --dest dist --include-task=generateCachebusterInfo",
+    "copy-xs-app": "cp xs-app.json dist/ 2>/dev/null || copy xs-app.json dist\\",
+    "int-test": "fiori run --config ui5-dist.yaml"
+  },
+  "ui5": {
+    "dependencies": [
+      "@sap/ux-ui5-tooling"
+    ]
   }
 }

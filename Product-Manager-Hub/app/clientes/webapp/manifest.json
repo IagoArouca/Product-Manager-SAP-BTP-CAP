@@ -1,28 +1,26 @@
 {
   "_version": "1.81.0",
   "sap.app": {
-    "id": "clientes",
+    "id": "comdouradoclientes",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
-      "version": "0.0.1"
+      "version": "1.0.3"
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
-
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/product/",
+        "uri": "/odata/v4/ProductService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
         }
       }
     },
-
     "crossNavigation": {
       "inbounds": {
-        "Clientes-Gerenciador": {
+        "clientes-manage": {
           "semanticObject": "Clientes",
           "action": "Gerenciador",
           "title": "Clientes Manager",
@@ -34,75 +32,35 @@
       }
     }
   },
-
   "sap.ui": {
     "technology": "UI5",
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
+    "icons": {
+      "icon": "sap-icon://customer"
     }
   },
-
   "sap.ui5": {
+    "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.145.0",
+      "minUI5Version": "1.120.0",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
         "sap.fe.templates": {}
       }
     },
-
     "models": {
       "": {
         "dataSource": "mainService",
+        "preload": true,
         "settings": {
           "operationMode": "Server",
           "autoExpandSelect": true
         }
       }
-    },
-
-    "routing": {
-      "routes": [
-        {
-          "pattern": ":?query:",
-          "name": "CustomersList",
-          "target": "CustomersList"
-        },
-        {
-          "pattern": "Customers({key}):?query:",
-          "name": "CustomersObjectPage",
-          "target": "CustomersObjectPage"
-        }
-      ],
-
-      "targets": {
-        "CustomersList": {
-          "type": "Component",
-          "name": "sap.fe.templates.ListReport",
-          "options": {
-            "settings": {
-              "contextPath": "/Customers"
-            }
-          }
-        },
-
-        "CustomersObjectPage": {
-          "type": "Component",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "contextPath": "/Customers"
-            }
-          }
-        }
-      }
     }
   },
-
-  "sap.fiori": {
-    "archeType": "transactional"
+  "sap.cloud": {
+    "public": true,
+    "service": "cp.products.v3"
   }
 }

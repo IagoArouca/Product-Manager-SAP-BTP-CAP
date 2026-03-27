@@ -1,25 +1,39 @@
 {
-  "xsappname": "cp-products-management-16d29341trial-dev",
+  "xsappname": "cp_products_v2",
   "tenant-mode": "dedicated",
   "scopes": [
     {
-      "name": "$XSAPPNAME.Admin",
-      "description": "Admin access"
+      "name": "$XSAPPNAME.admin",
+      "description": "Administrador do Sistema"
+    },
+    {
+      "name": "$XSAPPNAME.user",
+      "description": "Usuário Autenticado"
     }
   ],
   "role-templates": [
     {
-      "name": "Admin",
-      "description": "Administrator",
+      "name": "admin",
+      "description": "Privilégios de Administrador",
       "scope-references": [
-        "$XSAPPNAME.Admin"
+        "$XSAPPNAME.admin"
+      ]
+    },
+    {
+      "name": "authenticated-user",
+      "description": "Privilégios de Usuário Autenticado",
+      "scope-references": [
+        "$XSAPPNAME.user"
       ]
     }
   ],
+  "authorities": [
+    "$XSAPPNAME.user"
+  ],
   "oauth2-configuration": {
     "redirect-uris": [
-      "https://*.hana.ondemand.com/**"
+      "https://*.cfapps.us10-001.hana.ondemand.com/**",
+      "https://*.launchpad.cfapps.us10-001.hana.ondemand.com/**"
     ]
-  },
-  "attributes": []
+  }
 }

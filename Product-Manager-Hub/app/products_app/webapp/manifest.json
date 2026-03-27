@@ -1,27 +1,26 @@
 {
   "_version": "1.81.0",
   "sap.app": {
-    "id": "products_app",
+    "id": "comdouradoproducts",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
-      "version": "0.0.1"
+      "version": "1.0.3"
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/product/",
+        "uri": "/odata/v4/ProductService/",
         "type": "OData",
         "settings": {
-          "annotations": [],
           "odataVersion": "4.0"
         }
       }
     },
     "crossNavigation": {
       "inbounds": {
-        "Products-ManagerProducts": {
+        "products-manage": {
           "semanticObject": "Products",
           "action": "ManagerProducts",
           "title": "Products Manager",
@@ -33,80 +32,35 @@
       }
     }
   },
-
   "sap.ui": {
     "technology": "UI5",
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
+    "icons": {
+      "icon": "sap-icon://product"
     }
   },
-
   "sap.ui5": {
     "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.145.0",
+      "minUI5Version": "1.120.0",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
         "sap.fe.templates": {}
       }
     },
-
     "models": {
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
           "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
-        }
-      }
-    },
-
-    "routing": {
-      "routes": [
-        {
-          "pattern": ":?query:",
-          "name": "ProductsList",
-          "target": "ProductsList"
-        },
-        {
-          "pattern": "Products({key}):?query:",
-          "name": "ProductsObjectPage",
-          "target": "ProductsObjectPage"
-        }
-      ],
-
-      "targets": {
-        "ProductsList": {
-          "type": "Component",
-          "id": "ProductsList",
-          "name": "sap.fe.templates.ListReport",
-          "options": {
-            "settings": {
-              "contextPath": "/Products"
-            }
-          }
-        },
-
-        "ProductsObjectPage": {
-          "type": "Component",
-          "id": "ProductsObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "contextPath": "/Products"
-            }
-          }
+          "autoExpandSelect": true
         }
       }
     }
   },
-
-  "sap.fiori": {
-    "archeType": "transactional"
+  "sap.cloud": {
+    "public": true,
+    "service": "cp.products.v3"
   }
 }
