@@ -7,16 +7,16 @@ server:
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # Mantenha false para segurança
+        ignoreCertError: false 
         ui5:
           path:
             - /resources
             - /test-resources
           url: https://ui5.sap.com
         backend:
-          - path: /cp-products-backend-dest # O prefixo que definimos no manifest.json
-            url: http://localhost:4004     # Onde o seu CAP (cds watch) roda localmente
-            destination: cp-products-backend-dest # O nome do destino no mta.yaml
+          - path: /cp-products-backend-dest 
+            url: http://localhost:4004     
+            destination: cp-products-backend-dest 
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

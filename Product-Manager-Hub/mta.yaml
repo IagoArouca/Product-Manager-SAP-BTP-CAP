@@ -1,6 +1,7 @@
 _schema-version: "3.3"
 ID: cp_products_enterprise
-version: 1.0.6
+version: 1.1.6
+
 parameters:
   enable-parallel-deployments: true
 
@@ -12,9 +13,7 @@ build-parameters:
         - npx cds build --production
 
 modules:
-  # ------------------------------------------------------------
-  # BACKEND - OData Service
-  # ------------------------------------------------------------
+
   - name: cp-products-srv
     type: nodejs
     path: gen/srv
@@ -28,9 +27,6 @@ modules:
       - name: cp-products-auth
       - name: cp-products-db
 
-  # ------------------------------------------------------------
-  # DB DEPLOYER - HANA Tables
-  # ------------------------------------------------------------
   - name: cp-products-db-deployer
     type: hdb
     path: gen/db
@@ -39,9 +35,6 @@ modules:
     requires:
       - name: cp-products-db
 
-  # ------------------------------------------------------------
-  # UI CONTENT - Sobe os ZIPs para o HTML5 Repo
-  # ------------------------------------------------------------
   - name: cp-products-app-content
     type: com.sap.application.content
     path: .
@@ -62,9 +55,38 @@ modules:
           artifacts: [comdouradoproducts.zip]
           target-path: resources/
 
-  # ------------------------------------------------------------
-  # BUILDERS - Apenas compilam os apps (Não criam instâncias)
-  # ------------------------------------------------------------
+  - name: cp-products-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: srv-api
+      - name: cp-products-dest-service
+        parameters:
+          content-target: true
+      - name: cp-products-auth
+      - name: cp-products-repo-runtime
+    build-parameters:
+      no-source: true
+    parameters:
+      content:
+        subaccount: 
+          existing_destinations_policy: update
+          destinations:
+
+            - Name: cp-products-backend-dest
+              URL: ~{srv-api/srv-url}
+              Authentication: OAuth2UserTokenExchange
+              HTML5.DynamicDestination: true
+              HTML5.ForwardAuthToken: true
+              ServiceInstanceName: cp-products-auth
+
+
+            - Name: cp-products-html5-repo
+              ServiceInstanceName: cp-products-repo-runtime
+              ServiceKeyName: cp-products-repo-runtime-key
+              Authentication: OAuth2UserTokenExchange
+              sap.cloud.service: html5-apps-repo-rt 
+              HTML5.DynamicDestination: true
+
   - name: ui_clientes
     type: com.sap.application.content
     path: app/clientes
@@ -101,16 +123,18 @@ modules:
         - bash -c "cd dist && zip -r ../comdouradoproducts.zip ."
       build-result: .
 
-# ------------------------------------------------------------
-# RESOURCES - Serviços instanciados no BTP
-# ------------------------------------------------------------
+
 resources:
+
   - name: cp-products-auth
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
+      config:
+        xsappname: cp_products_v3
+        tenant-mode: dedicated
 
   - name: cp-products-db
     type: com.sap.xs.hdi-container
@@ -118,12 +142,13 @@ resources:
       service: hana
       service-plan: hdi-shared
 
-  # Criamos o serviço, mas o conteúdo você fará no Cockpit
   - name: cp-products-dest-service
     type: org.cloudfoundry.managed-service
     parameters:
       service: destination
       service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
 
   - name: cp-products-repo-host
     type: org.cloudfoundry.managed-service
@@ -136,3 +161,6 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-runtime
+      config:
+        service-keys:
+          - name: cp-products-repo-runtime-key 
