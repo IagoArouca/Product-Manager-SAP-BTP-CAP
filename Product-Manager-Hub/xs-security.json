@@ -1,6 +1,7 @@
 {
   "xsappname": "cp_products_v3",
   "tenant-mode": "dedicated",
+  "description": "Configuração de Segurança - Enterprise CP Products",
   "scopes": [
     {
       "name": "$XSAPPNAME.admin",
@@ -27,13 +28,11 @@
       ]
     }
   ],
-  "authorities": [
-    "$XSAPPNAME.user"
-  ],
   "oauth2-configuration": {
     "redirect-uris": [
       "https://*.cfapps.us10-001.hana.ondemand.com/**",
-      "https://*.launchpad.cfapps.us10-001.hana.ondemand.com/**"
+      "https://*.launchpad.cfapps.us10-001.hana.ondemand.com/**",
+      "https://*.ondemand.com/**"
     ]
   }
 }
